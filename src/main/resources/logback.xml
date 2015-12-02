@@ -1,0 +1,36 @@
+<configuration debug="false" scan="true" scanPeriod="30 seconds">
+	<property name="FILE_PATTERN" value="%d [%t] %5p %c - %m%n" />
+		
+	<property name="LOG_FILE_NAME" value="service" />
+	
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>logs/${LOG_FILE_NAME}.log</File>
+		<encoder>
+			<pattern>${FILE_PATTERN}</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>32MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<fileNamePattern>logs/archive/${LOG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d [%t] %5p \(%F:%L\) %M\(\) - %m%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="com.mogujie.hurricane.msg" addtivity="false">
+		<appender-ref ref="FILE" />
+	</logger>
+
+
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>
