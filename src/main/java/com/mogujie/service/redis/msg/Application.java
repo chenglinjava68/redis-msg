@@ -23,8 +23,11 @@ public class Application {
 
 
     public static void main(String[] args) throws InterruptedException {
+        //send message
         sendMsg();
+        //listener model :receive message
 //        receiveMsg();
+        //non-blocking model: receive message
 //        receiveMsgNonblock();
 
     }
@@ -71,7 +74,7 @@ public class Application {
         Thread.sleep(1000);
         logger.info("开始消费消息");
         while (true) {
-//            Thread.sleep(1000);
+            Thread.sleep(1000);
             List<String> results = client.consume(10);
             logger.info("收到消息：size {}, 数据 : {}", results.size(), results);
             client.someAck(results);//batch ack
