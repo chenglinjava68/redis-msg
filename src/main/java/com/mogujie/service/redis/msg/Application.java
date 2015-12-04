@@ -23,9 +23,9 @@ public class Application {
 
 
     public static void main(String[] args) throws InterruptedException {
-//        sendMsg();
+        sendMsg();
 //        receiveMsg();
-        receiveMsgNonblock();
+//        receiveMsgNonblock();
 
     }
 
@@ -33,25 +33,16 @@ public class Application {
      * use listener
      * @throws InterruptedException
      */
+    @SuppressWarnings("unchecked")
     private static void receiveMsg() throws InterruptedException {
 
         final SubListenerClient subClient = new SubListenerClient(new AbstractMessageListener(CLIENT_ID) {
-            @Override
-            public void illegalMessage(String channel, String message) {
-                logger.error("收到消息非法消息 channel : {}, message : {}", channel, message);
-            }
-
             @Override
             public void normalMessage(String channel, String message) {
                 logger.info("收到消息正常消息 channel : {}, message : {}",channel,message);
                 try {
                     Thread.sleep(100);
                     this.ack(message);
-
-//                    if(Integer.parseInt(message.split(Constants.MESSAGE_SEPARATOR)[0])==500) {
-//                        System.exit(0);
-//                    }
-
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();

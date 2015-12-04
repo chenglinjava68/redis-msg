@@ -19,6 +19,9 @@ abstract public class AbstractMessageListener extends JedisPubSub {
     private PubSubHandler handler;
     private boolean autoAck = true;
 
+    /**
+     * @param clientId user defined id
+     */
     public AbstractMessageListener(String clientId){
 //        this.clientId = GenerateChannelIdUtil.generateChannelId();
         this.clientId = clientId;
@@ -44,7 +47,7 @@ abstract public class AbstractMessageListener extends JedisPubSub {
      * @param channel
      * @param message
      */
-    abstract public void illegalMessage(String channel,String message);
+//    abstract public void illegalMessage(String channel,String message);
 
     /**
      * handle normal message
@@ -145,12 +148,6 @@ abstract public class AbstractMessageListener extends JedisPubSub {
             this.jedis = super.getResource();
         }
         public void handle(String channel,String message){
-            int index = message.indexOf(Constants.MESSAGE_SEPARATOR);
-            if(index < 0){
-                return;
-            }
-            Long messageId = Long.valueOf(message.substring(0,index));
-
             /**
              * clientId/channel-name
              */
@@ -161,47 +158,14 @@ abstract public class AbstractMessageListener extends JedisPubSub {
                 if(lm == null){
                     break;
                 }
-
-                int li = lm.indexOf(Constants.MESSAGE_SEPARATOR);
-
-                /**
-                 * Illegal message
-                 *  1.del illegal message
-                 *  2.handle illegal message
-                 */
-                if(li < 0){//not include Constants.MESSAGE_SEPARATOR
-                    //delete illegal message from current list
-                    String result = jedis.lpop(key);
-
-                    if(result == null){
-                        break;
-                    }
-
-                    //handle illegal message
-                    illegalMessage(channel, lm);
-
-                    continue;
+                if(autoAck) {
+                    jedis.lpop(key);
+                } else {
+                    jedis.lrange(key,0,1);
                 }
-
-                //first message id in queue
-                Long listFirstMessageId = Long.valueOf(lm.substring(0,li));//获取消息的id
-
-                /**
-                 * when messageId >= listFirstMessageId.Consume backlog message
-                 */
-                if(messageId >= listFirstMessageId){
-                    //Del current message
-                    if(autoAck) {
-                        jedis.lpop(key);
-                    } else {
-                        jedis.lrange(key,0,1);
-                    }
-                    //handle normal message
-                    normalMessage(channel, lm);
-                    continue;
-                }else{
-                    break;
-                }
+                //handle normal message
+                normalMessage(channel, lm);
+                continue;
             }
         }
 
