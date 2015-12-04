@@ -25,7 +25,7 @@
 		</encoder>
 	</appender>
 
-	<logger name="com.mogujie.hurricane.msg" addtivity="false">
+	<logger name="com.mogujie.service.redis.msg" addtivity="false">
 		<appender-ref ref="FILE" />
 	</logger>
 

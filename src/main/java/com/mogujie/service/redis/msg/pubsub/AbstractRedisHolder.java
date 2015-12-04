@@ -4,9 +4,9 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -21,15 +21,14 @@ abstract public class AbstractRedisHolder {
     private static class RedisHodler {
         private static JedisPool pool;
         private static Properties prop;
-        private static FileInputStream inputStream;
+        private static InputStream inputStream;
         static {
             prop = new Properties();
 
             try {
 
-                String filePath = Thread.currentThread().getContextClassLoader().getResource("redis-config.properties").getPath();
+                inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("redis-config.properties");
                 /******** 读取prop配置 ********/
-                inputStream = new FileInputStream(filePath);
                 prop.load(inputStream);
                 inputStream.close();
                 inputStream = null;
