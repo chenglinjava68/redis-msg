@@ -30,17 +30,30 @@ public class PubClient extends AbstractPubMessageClient {
      *
      * @see  SubListenerClient
      */
-    private void put(String message){
+    private void put(String channel,String message){
         Set<String> subClients = getJedis().smembers(Constants.SUBSCRIBE_CENTER);
         for(String clientKey : subClients){
-            getJedis().rpush(clientKey, message);
+
+            if(clientKey.indexOf(Constants.MESSAGE_SEPARATOR)!=-1) {
+
+                //clientKey: clientId/channel 格式
+                String[] splitClientKeyArray = clientKey.split(Constants.MESSAGE_SEPARATOR);
+
+                if(splitClientKeyArray.length==2) {
+                    String storeChannel = splitClientKeyArray[1];
+                    //push message to the same channel
+                    if(channel.equals(storeChannel)) {
+                        getJedis().rpush(clientKey, message);
+                    }
+                }
+            }
         }
     }
 
     @Override
     public void pub(String channel,String message){
         try {
-            this.put(message);
+            this.put(channel,message);
             getJedis().publish(channel, message);
         } catch (Exception e) {
             e.printStackTrace();
