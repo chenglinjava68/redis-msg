@@ -5,9 +5,7 @@ package com.mogujie.service.redis.msg.constants;
  */
 public class Constants {
 
-    public final static String SUBSCRIBE_CENTER = "_-subscribe-center-_";
-
-    public final static String MESSAGE_ID = "_-message-id-_";
+    public final static String SUBSCRIBE_CENTER = "_message_subscribe_center_";
 
     public final static String MESSAGE_SEPARATOR = "/";
 }
