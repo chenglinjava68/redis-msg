@@ -49,7 +49,7 @@ abstract public class AbstractRedisHolder {
 
 
                 //pubsub
-                pool = new JedisPool(config,prop.getProperty("pub_sub_jedis_host"),Integer.parseInt(prop.getProperty("pub_sub_jedis_port")));
+                pool = new JedisPool(config,prop.getProperty("pub_sub_redis_host"),Integer.parseInt(prop.getProperty("pub_sub_redis_port")));
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
