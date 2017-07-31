@@ -3,4 +3,4 @@ redis-msg：利用redis pub/sub 实现消息队列同时支持消息确认机制
 how to use？ @see com.mogujie.service.redis.msg.Application
 
 
-疑问交流:200974077@qq.com
+疑问交流:smiletojava@gmail.com
